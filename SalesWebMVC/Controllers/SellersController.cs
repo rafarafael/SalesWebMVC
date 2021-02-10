@@ -5,15 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SalesWebMVC.Models.ViewModels;
 
 namespace SalesWebMVC.Controllers
 {
     public class SellersController : Controller
     {
         private readonly SellerService _sellerService;
-        public SellersController(SellerService sellerSerice)
+        private readonly DepartmentService _departmentService;
+        public SellersController(SellerService sellerSerice, DepartmentService departmentService)
         {
             _sellerService = sellerSerice;
+            _departmentService = departmentService;
         }
         public IActionResult Index()
         {
@@ -22,7 +25,9 @@ namespace SalesWebMVC.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel { Departments = departments };
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
